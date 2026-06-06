@@ -1,0 +1,14 @@
+.next
+node_modules
+dist
+coverage
+.env
+.env.local
+.env.production
+*.log
+dev.db
+dev.db-shm
+dev.db-wal
+dev.db-journal
+uploads
+tsconfig.tsbuildinfo

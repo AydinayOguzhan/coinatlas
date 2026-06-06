@@ -1,0 +1,7 @@
+[+]kare olmayan fotoğraflar full görünmüyor, fotoğraflar olduğu gibi görünmeli 
+[+]update yapmaya çalıştığımda resimleri değiştirmek yerine yenilerini ekliyorum, eskileri de kalıyor sistemde. istediğimi silip istediğimi ekleyebilmeliyim
+[+]numistadan gelen resimlerin görüntü kaliteleri bir tık bozuluyor gibi
+[+]liste ekranında resimler görünmeli
+[+]numista matchlerine tıklanmıyor. onlara tıklayıp numista sitesine gidebilmeliyim
+[+]identify ekranı aynı resimle (veya farklı resimle) aynı parayı aramama rağmen koleksiyonumda match bulamadi (match var)
+[+]search özelliği de para koleksiyonumda ekli olmasına rağmen match bulamadı 
