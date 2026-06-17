@@ -195,7 +195,7 @@ export default async function IdentifyPage({
                       key={pageNumber}
                       href={buildPageHref(pageNumber)}
                       className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                        pageNumber === numistaSearchResult.page ? "bg-accent text-white" : "bg-paper text-ink"
+                        pageNumber === numistaSearchResult.page ? "bg-[#e6c093] text-ink" : "bg-paper text-ink"
                       }`}
                     >
                       {pageNumber}

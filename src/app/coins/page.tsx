@@ -66,10 +66,10 @@ export default async function CoinsPage({
               <option value="year">Year</option>
             </select>
             <div className="flex gap-3 lg:col-span-6">
-              <button type="submit" className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper">
+              <button type="submit" className="rounded-full bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink">
                 Apply filters
               </button>
-              <Link href="/coins/new" className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white">
+              <Link href="/coins/new" className="rounded-full bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink">
                 Add coin
               </Link>
             </div>
@@ -107,7 +107,7 @@ export default async function CoinsPage({
                       </div>
                     )}
                   </Link>
-                  <div className="pointer-events-none absolute inset-x-6 bottom-5 hidden rounded-full bg-ink/85 px-4 py-2 text-xs uppercase tracking-[0.22em] text-paper/90 sm:block">
+                  <div className="pointer-events-none absolute inset-x-6 bottom-5 hidden rounded-full bg-[#f2efe9]/95 px-4 py-2 text-xs uppercase tracking-[0.22em] text-ink sm:block">
                     {coin.images.length > 0 ? `${coin.images.length} image${coin.images.length > 1 ? "s" : ""}` : "Photo slot ready"}
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export default async function CoinsPage({
                         <p className="mt-1 text-xs text-ink/65">Added {formatDate(coin.createdAt)}</p>
                         <p
                           className={`mt-3 inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${
-                            coin.isPublished ? "bg-moss text-white" : "bg-white text-ink/75"
+                            coin.isPublished ? "bg-[#d3e8d5] text-ink" : "bg-white text-ink/75"
                           }`}
                         >
                           {coin.isPublished ? "Published" : "Private"}
@@ -192,7 +192,7 @@ export default async function CoinsPage({
 
                     <div className="flex items-center justify-between gap-3 border-t border-line/60 pt-1">
                       <p className="text-sm text-ink/60">Open this record to edit details, images, and source references.</p>
-                      <Link href={`/coins/${coin.id}`} className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper">
+                      <Link href={`/coins/${coin.id}`} className="rounded-full bg-[#e6c093] px-4 py-2 text-sm font-semibold text-ink">
                         View coin
                       </Link>
                     </div>

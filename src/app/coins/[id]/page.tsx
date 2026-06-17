@@ -73,7 +73,7 @@ export default async function CoinDetailPage({
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={`/coins/${coin.id}/edit`} className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper">
+            <Link href={`/coins/${coin.id}/edit`} className="rounded-full bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink">
               Edit coin
             </Link>
             <Link href="/coins" className="rounded-full bg-paper px-5 py-3 text-sm font-semibold text-ink">

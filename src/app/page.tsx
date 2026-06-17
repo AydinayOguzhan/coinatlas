@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { SectionCard } from "@/components/cards";
 import { PublicShell } from "@/components/public-shell";
 import { getAdminSession } from "@/lib/auth";
 import { getPublishedCoins } from "@/lib/data";
@@ -14,87 +13,95 @@ export default async function HomePage() {
 
   return (
     <PublicShell showLogin={!session}>
-      <div className="space-y-6">
-        <SectionCard
-          title="Published collection"
-          description="Only coins you explicitly publish appear here. The rest of your workspace stays behind the admin login."
-        >
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.5rem] border border-line/70 bg-paper/70 p-4 text-sm text-ink/75">
-            <p>{coins.length} published coin{coins.length === 1 ? "" : "s"} currently visible.</p>
-            <div className="flex gap-3">
-              {session ? (
-                <Link href="/dashboard" className="rounded-full bg-ink px-4 py-2 font-semibold text-paper">
-                  Open admin panel
-                </Link>
-              ) : (
-                <Link href="/login" className="rounded-full bg-accent px-4 py-2 font-semibold text-white">
-                  Login
-                </Link>
-              )}
+      <section className="py-8 text-center">
+        <div className="mx-auto max-w-3xl space-y-4">
+          <h1 className="font-display text-5xl leading-none text-ink sm:text-6xl">CoinAtlas</h1>
+          <p className="text-2xl italic text-primary/85">A Private Numismatic Archive</p>
+          <div className="editorial-divider mx-auto my-6 max-w-md" />
+          <p className="text-lg leading-8 text-ink/72">
+            A self-hosted collection showcase of historical coins, curated for preservation and study. Discover selected artifacts without exposing the private archive behind them.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            {session ? (
+              <Link href="/dashboard" className="rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel">
+                Open Admin Panel
+              </Link>
+            ) : (
+              <Link href="/login" className="rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel">
+                Login to Archive
+              </Link>
+            )}
+            <span className="rounded-full border border-line/70 bg-[#f2efe9] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-ink/60">
+              {coins.length} Published Coins
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-10">
+        <div className="mb-8 flex items-end justify-between gap-4 border-b border-line/35 pb-4">
+          <div>
+            <h2 className="font-display text-4xl text-ink">Curated Highlights</h2>
+            <p className="mt-2 text-sm uppercase tracking-[0.24em] text-primary/70">Exhibition 01</p>
+          </div>
+          <p className="hidden max-w-md text-right text-sm leading-6 text-ink/62 md:block">
+            Only coins you explicitly publish appear here. The rest of the collection remains in your private admin ledger.
+          </p>
+        </div>
+
+        {coins.length === 0 ? (
+          <div className="parchment-card rounded-xl p-8 text-center">
+            <h3 className="font-display text-3xl text-ink">No public coins yet</h3>
+            <p className="mt-3 text-sm leading-7 text-ink/68">
+              Publish coins from the admin collection to turn this page into a public-facing exhibition.
+            </p>
+            <div className="mt-6">
+              <Link href="/login" className="rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel">
+                Log in to manage showcase items
+              </Link>
             </div>
           </div>
-        </SectionCard>
-
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {coins.length === 0 ? (
-            <SectionCard title="No public coins yet" description="Publish coins from the admin panel to turn this page into a public showcase.">
-              <Link href="/login" className="text-sm font-semibold text-accent hover:underline">
-                Log in to manage published items
-              </Link>
-            </SectionCard>
-          ) : null}
-
-          {coins.map((coin) => (
-            <Link key={coin.id} href={`/collection/${coin.id}`} className="block">
-              <article className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-[0_18px_50px_rgba(122,82,43,0.14)]">
-                <div className="relative h-72 border-b border-line/60 bg-[radial-gradient(circle_at_top,_rgba(182,104,45,0.16),transparent_48%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,243,232,0.95))]">
-                  {coin.images[0] ? (
-                    <Image
-                      src={getPublicUploadPath(coin.images[0].filePath)}
-                      alt={coin.title}
-                      fill
-                      className="object-contain p-6"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-xs uppercase tracking-[0.28em] text-moss">
-                      No image yet
-                    </div>
-                  )}
-                </div>
-                <div className="space-y-3 p-5">
-                  <div className="flex flex-wrap gap-2">
-                    {coin.country ? (
-                      <span className="rounded-full bg-moss/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-moss">
-                        {coin.country}
-                      </span>
-                    ) : null}
-                    {coin.denomination ? (
-                      <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-                        {coin.denomination}
-                      </span>
-                    ) : null}
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {coins.map((coin) => (
+              <Link key={coin.id} href={`/collection/${coin.id}`} className="group block">
+                <article className="parchment-card rounded-xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-card">
+                  <div className="relative mb-8 flex justify-center">
                     {coin.year ? (
-                      <span className="rounded-full bg-paper px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-ink/72">
-                        {coin.year}
+                      <span className="absolute right-0 top-0 bg-[#fcf9f8] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary/70">
+                        {coin.country ?? "Unknown"} · {coin.year}
                       </span>
                     ) : null}
+                    <div className="relative h-64 w-full overflow-hidden rounded-lg border border-[#d4af37]/35 bg-[#fcf9f8] p-4 shadow-panel">
+                      {coin.images[0] ? (
+                        <Image
+                          src={getPublicUploadPath(coin.images[0].filePath)}
+                          alt={coin.title}
+                          fill
+                          className="object-contain p-4"
+                          unoptimized
+                        />
+                      ) : (
+                        <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-line/70 text-xs uppercase tracking-[0.28em] text-moss">
+                          No image
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="font-display text-3xl leading-tight text-ink">{coin.title}</h2>
-                    <p className="mt-2 text-sm text-ink/72">
-                      {[coin.composition, coin.shape, coin.edge].filter(Boolean).join(" • ") || "Open the public detail page for more catalog information."}
-                    </p>
+
+                  <div className="space-y-2">
+                    <h3 className="font-display text-3xl leading-tight text-ink transition group-hover:text-primary">{coin.title}</h3>
+                    <div className="flex items-center justify-between gap-3 text-sm text-ink/70">
+                      <span>{coin.country ?? "Unknown origin"}</span>
+                      <span className="italic">{coin.denomination ?? "Catalog specimen"}</span>
+                    </div>
                   </div>
-                  <span className="inline-flex rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper">
-                    View public details
-                  </span>
-                </div>
-              </article>
-            </Link>
-          ))}
-        </div>
-      </div>
+                </article>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
     </PublicShell>
   );
 }

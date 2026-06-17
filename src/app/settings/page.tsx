@@ -31,7 +31,7 @@ export default async function SettingsPage() {
                   <h3 className="font-semibold text-ink">{key}</h3>
                   <p className="text-sm text-ink/70">{note}</p>
                 </div>
-                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${configured ? "bg-moss text-white" : "bg-accent text-white"}`}>
+                <span className={`rounded-full px-3 py-1 text-xs font-semibold ${configured ? "bg-[#d3e8d5] text-ink" : "bg-[#ffddb6] text-ink"}`}>
                   {configured ? "Configured" : "Missing"}
                 </span>
               </div>

@@ -16,7 +16,7 @@ function PublishToggleButton({ isPublished }: { isPublished: boolean }) {
       disabled={pending}
       aria-label={isPublished ? "Make private" : "Publish publicly"}
       className={`relative inline-flex h-8 w-16 items-center rounded-full border transition ${
-        isPublished ? "border-moss bg-moss" : "border-line bg-white"
+        isPublished ? "border-moss bg-moss" : "border-line bg-[#f2efe9]"
       } disabled:cursor-wait disabled:opacity-70`}
     >
       <span
