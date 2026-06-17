@@ -1,10 +1,12 @@
 import { AppShell } from "@/components/app-shell";
 import { SectionCard } from "@/components/cards";
+import { requireAdminSession } from "@/lib/auth";
 import { getEnv, getEnvHealth } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  await requireAdminSession();
   const env = getEnv();
   const health = getEnvHealth();
 
@@ -12,6 +14,9 @@ export default function SettingsPage() {
     ["DATABASE_URL", health.DATABASE_URL, "SQLite database path"],
     ["NUMISTA_API_KEY", health.NUMISTA_API_KEY, "Required for Numista catalog search and details"],
     ["GOOGLE_API_KEY", health.GOOGLE_API_KEY, "Required for Gemini OCR and image analysis"],
+    ["ADMIN_USERNAME", health.ADMIN_USERNAME, "Shared admin username for the protected panel"],
+    ["ADMIN_PASSWORD", health.ADMIN_PASSWORD, "Shared admin password for the protected panel"],
+    ["AUTH_SECRET", health.AUTH_SECRET, "Signs the admin session cookie"],
     ["UPLOAD_DIR", health.UPLOAD_DIR, "Local directory for uploaded files"]
   ];
 

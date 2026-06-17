@@ -6,6 +6,7 @@ export const coins = sqliteTable("coins", {
   numistaId: text("numista_id"),
   title: text("title").notNull(),
   country: text("country").notNull(),
+  isPublished: integer("is_published", { mode: "boolean" }).notNull().default(false),
   issuer: text("issuer"),
   denomination: text("denomination"),
   currency: text("currency"),

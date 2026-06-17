@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { imageSearchAction } from "@/app/actions";
 import { AppShell } from "@/components/app-shell";
+import { requireAdminSession } from "@/lib/auth";
 import { SectionCard } from "@/components/cards";
 import { FormSubmitButton } from "@/components/form-submit-button";
 import { getIdentificationSession, searchCoinsInCollection } from "@/lib/data";
@@ -28,6 +29,7 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const params = await searchParams;
   const query = typeof params.q === "string" ? params.q : "";
   const sessionId = typeof params.sessionId === "string" ? Number(params.sessionId) : null;

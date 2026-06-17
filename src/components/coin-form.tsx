@@ -5,6 +5,7 @@ type CoinFormValues = {
   numistaId?: string | null | undefined;
   title?: string | null | undefined;
   country?: string | null | undefined;
+  isPublished?: boolean | null | undefined;
   issuer?: string | null | undefined;
   denomination?: string | null | undefined;
   currency?: string | null | undefined;
@@ -105,6 +106,14 @@ export function CoinForm({ action, submitLabel, initialValues }: CoinFormProps) 
       <label className="block space-y-2 text-sm font-medium text-ink">
         <span>Notes</span>
         <textarea name="notes" rows={5} defaultValue={initialValues?.notes ?? ""} />
+      </label>
+
+      <label className="flex items-start gap-3 rounded-[1.5rem] border border-line/70 bg-paper/70 p-4 text-sm text-ink">
+        <input type="checkbox" name="isPublished" defaultChecked={Boolean(initialValues?.isPublished)} className="mt-1 h-4 w-4 shrink-0" />
+        <span>
+          <strong className="block text-ink">Publish publicly</strong>
+          This coin will appear on the public showcase and public detail pages. Leave it unchecked to keep it admin-only.
+        </span>
       </label>
 
       <div className="grid gap-4 md:grid-cols-2">

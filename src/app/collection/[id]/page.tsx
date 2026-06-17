@@ -2,23 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { AppShell } from "@/components/app-shell";
 import { SectionCard } from "@/components/cards";
-import { requireAdminSession } from "@/lib/auth";
-import { getCoinById } from "@/lib/data";
-import { formatDate } from "@/lib/utils";
+import { PublicShell } from "@/components/public-shell";
+import { getPublishedCoinById } from "@/lib/data";
 import { getPublicUploadPath } from "@/lib/uploads";
 
 export const dynamic = "force-dynamic";
 
-export default async function CoinDetailPage({
+export default async function PublicCoinDetailPage({
   params
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdminSession();
   const { id } = await params;
-  const coin = await getCoinById(Number(id));
+  const coin = await getPublishedCoinById(Number(id));
 
   if (!coin) {
     notFound();
@@ -36,24 +33,17 @@ export default async function CoinDetailPage({
     ["Diameter", coin.diameter ? `${coin.diameter} mm` : null],
     ["Thickness", coin.thickness ? `${coin.thickness} mm` : null],
     ["Shape", coin.shape],
-    ["Edge", coin.edge],
-    ["Quantity", String(coin.quantity)],
-    ["Public status", coin.isPublished ? "Published" : "Private"],
-    ["Condition", coin.condition],
-    ["Storage", coin.storageLocation],
-    ["Acquired", coin.acquisitionDate],
-    ["Acquisition price", coin.acquisitionPrice ? String(coin.acquisitionPrice) : null],
-    ["Numista ID", coin.numistaId]
+    ["Edge", coin.edge]
   ];
 
   return (
-    <AppShell currentPath="/coins">
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+    <PublicShell>
+      <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <SectionCard title={coin.title} description={[coin.country, coin.denomination, coin.year].filter(Boolean).join(" • ")}>
           <div className="grid gap-4 sm:grid-cols-2">
             {coin.images.length === 0 ? (
               <div className="rounded-[1.5rem] border border-dashed border-line bg-paper/70 p-5 text-sm text-ink/70">
-                No images uploaded yet.
+                No public images available for this coin yet.
               </div>
             ) : null}
             {coin.images.map((image) => (
@@ -67,23 +57,25 @@ export default async function CoinDetailPage({
                     unoptimized
                   />
                 </div>
-                <p className="text-sm text-ink/70">{image.side}</p>
+                <p className="text-sm capitalize text-ink/70">{image.side}</p>
               </div>
             ))}
           </div>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link href={`/coins/${coin.id}/edit`} className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper">
-              Edit coin
+            <Link href="/" className="rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper">
+              Back to showcase
             </Link>
-            <Link href="/coins" className="rounded-full bg-paper px-5 py-3 text-sm font-semibold text-ink">
-              Back to collection
-            </Link>
+            {coin.sourceUrl ? (
+              <Link href={coin.sourceUrl} target="_blank" className="rounded-full bg-paper px-5 py-3 text-sm font-semibold text-ink">
+                Open source link
+              </Link>
+            ) : null}
           </div>
         </SectionCard>
 
         <div className="space-y-6">
-          <SectionCard title="Metadata" description={`Added ${formatDate(coin.createdAt)}`}>
+          <SectionCard title="Public metadata" description="Safe fields only. Private collection notes stay in the admin panel.">
             <dl className="grid gap-3">
               {metadata.map(([label, value]) =>
                 value ? (
@@ -96,7 +88,7 @@ export default async function CoinDetailPage({
             </dl>
           </SectionCard>
 
-          <SectionCard title="Descriptions" description="Imported and manual notes remain fully editable.">
+          <SectionCard title="Descriptions" description="Curated descriptions visible on the public showcase.">
             <div className="space-y-4 text-sm text-ink/78">
               <p>
                 <strong>Obverse:</strong> {coin.obverseDescription ?? "Not set"}
@@ -104,18 +96,10 @@ export default async function CoinDetailPage({
               <p>
                 <strong>Reverse:</strong> {coin.reverseDescription ?? "Not set"}
               </p>
-              <p>
-                <strong>Notes:</strong> {coin.notes ?? "No notes"}
-              </p>
-              {coin.sourceUrl ? (
-                <Link href={coin.sourceUrl} target="_blank" className="font-semibold text-accent hover:underline">
-                  Open source link
-                </Link>
-              ) : null}
             </div>
           </SectionCard>
         </div>
       </div>
-    </AppShell>
+    </PublicShell>
   );
 }

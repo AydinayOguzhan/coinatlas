@@ -1,6 +1,7 @@
 import { CoinForm } from "@/components/coin-form";
 import { AppShell } from "@/components/app-shell";
 import { SectionCard } from "@/components/cards";
+import { requireAdminSession } from "@/lib/auth";
 import { createCoinAction } from "@/app/actions";
 import { getCatalogProvider } from "@/lib/providers";
 import { mapCatalogDetailsToCoin } from "@/lib/data";
@@ -12,6 +13,7 @@ export default async function NewCoinPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const params = await searchParams;
   const numistaId = typeof params.numistaId === "string" ? params.numistaId : null;
   const provider = getCatalogProvider();

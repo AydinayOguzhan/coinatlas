@@ -5,6 +5,8 @@ CoinAtlas is an open-source, self-hosted coin collection web application built f
 ## Features
 
 - Personal coin CRUD with editable metadata
+- Public showcase for published coins
+- Shared admin login for the private management panel
 - Local SQLite storage with Drizzle ORM
 - Front and back image upload to local storage
 - Mobile-friendly identify flow
@@ -39,6 +41,7 @@ cp .env.example .env
 ```
 
 3. Fill in your API keys if you want OCR, AI analysis, or Numista lookup.
+   Also set your shared admin login credentials before exposing the app.
 
 4. Start the development server:
 
@@ -54,6 +57,10 @@ The SQLite database is created automatically from the runtime schema on first bo
 
 ```env
 DATABASE_URL="file:./dev.db"
+
+ADMIN_USERNAME=""
+ADMIN_PASSWORD=""
+AUTH_SECRET=""
 
 NUMISTA_API_KEY=""
 NUMISTA_API_BASE_URL="https://api.numista.com/v3"
@@ -83,6 +90,8 @@ All provider calls happen server-side. API keys are read from environment variab
 
 ## Security Notes
 
+- The public homepage only shows coins marked as published
+- All admin routes require the shared login cookie
 - `.env` is ignored by Git
 - Secrets are never exposed to client-side code
 - Secrets are never displayed in the settings UI
@@ -104,6 +113,14 @@ All provider calls happen server-side. API keys are read from environment variab
 9. The user verifies and saves the coin locally
 
 External data may be inaccurate. Users should always verify every field before saving.
+
+## Admin And Public Access
+
+- `/` is the public showcase page
+- `/collection/[id]` shows public details for published coins only
+- `/login` unlocks the private admin panel
+- Admin routes such as `/dashboard`, `/coins`, `/identify`, `/search`, and `/settings` require the shared login
+- This is intentionally a single shared admin login, not a multi-user account system
 
 ## Export
 

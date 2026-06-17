@@ -15,6 +15,7 @@ import {
   searchCoinsInCollection,
   updateCoin
 } from "@/lib/data";
+import { clearAdminSession, createAdminSession, requireAdminSession, verifyAdminCredentials } from "@/lib/auth";
 import { getCatalogProvider, getVisionProvider } from "@/lib/providers";
 import { getEnv } from "@/lib/env";
 import type { CatalogCategory } from "@/lib/providers/types";
@@ -26,6 +27,7 @@ function coinInputFromForm(formData: FormData) {
     numistaId: toNullableString(formData.get("numistaId")),
     title: toNullableString(formData.get("title")) ?? "Untitled coin",
     country: toNullableString(formData.get("country")) ?? "Unknown",
+    isPublished: formData.get("isPublished") === "on",
     issuer: toNullableString(formData.get("issuer")),
     denomination: toNullableString(formData.get("denomination")),
     currency: toNullableString(formData.get("currency")),
@@ -48,6 +50,29 @@ function coinInputFromForm(formData: FormData) {
     notes: toNullableString(formData.get("notes")),
     sourceUrl: toNullableString(formData.get("sourceUrl"))
   };
+}
+
+export async function loginAction(formData: FormData) {
+  const username = toNullableString(formData.get("username")) ?? "";
+  const password = toNullableString(formData.get("password")) ?? "";
+  const nextPath = toNullableString(formData.get("next")) ?? "/dashboard";
+
+  try {
+    if (!verifyAdminCredentials(username, password)) {
+      redirect(`/login?error=${encodeURIComponent("Invalid username or password.")}&next=${encodeURIComponent(nextPath)}`);
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Admin login is not configured.";
+    redirect(`/login?error=${encodeURIComponent(message)}&next=${encodeURIComponent(nextPath)}`);
+  }
+
+  await createAdminSession(username);
+  redirect(nextPath.startsWith("/") ? nextPath : "/dashboard");
+}
+
+export async function logoutAction() {
+  await clearAdminSession();
+  redirect("/login");
 }
 
 function toCatalogCategory(value: FormDataEntryValue | null): CatalogCategory | undefined {
@@ -95,6 +120,7 @@ async function attachRemoteCoinImage(coinId: number, url: string | null, side: "
 }
 
 export async function createCoinAction(formData: FormData) {
+  await requireAdminSession();
   const coinId = await createCoin(coinInputFromForm(formData));
 
   if (!coinId) {
@@ -112,10 +138,12 @@ export async function createCoinAction(formData: FormData) {
 
   revalidatePath("/dashboard");
   revalidatePath("/coins");
+  revalidatePath("/");
   redirect(`/coins/${coinId}`);
 }
 
 export async function updateCoinAction(coinId: number, formData: FormData) {
+  await requireAdminSession();
   await updateCoin(coinId, coinInputFromForm(formData));
 
   for (const value of formData.getAll("removeImageIds")) {
@@ -144,17 +172,33 @@ export async function updateCoinAction(coinId: number, formData: FormData) {
 
   revalidatePath(`/coins/${coinId}`);
   revalidatePath("/coins");
+  revalidatePath("/");
+  revalidatePath(`/collection/${coinId}`);
   redirect(`/coins/${coinId}`);
 }
 
+export async function toggleCoinPublishAction(coinId: number, nextPublishedState: boolean) {
+  await requireAdminSession();
+  await updateCoin(coinId, { isPublished: nextPublishedState });
+
+  revalidatePath("/coins");
+  revalidatePath(`/coins/${coinId}`);
+  revalidatePath("/");
+  revalidatePath(`/collection/${coinId}`);
+}
+
 export async function deleteCoinAction(coinId: number) {
+  await requireAdminSession();
   await deleteCoin(coinId);
   revalidatePath("/dashboard");
   revalidatePath("/coins");
+  revalidatePath("/");
+  revalidatePath(`/collection/${coinId}`);
   redirect("/coins");
 }
 
 export async function identifyCoinAction(formData: FormData) {
+  await requireAdminSession();
   try {
     const textInput = toNullableString(formData.get("textInput"));
     const userHint = toNullableString(formData.get("userHint"));
@@ -289,6 +333,7 @@ export async function identifyCoinAction(formData: FormData) {
 }
 
 export async function imageSearchAction(formData: FormData) {
+  await requireAdminSession();
   try {
     const textInput = toNullableString(formData.get("query"));
     const obverseImageFile = formData.get("obverseImage");

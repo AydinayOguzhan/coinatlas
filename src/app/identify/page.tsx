@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { identifyCoinAction } from "@/app/actions";
 import { AppShell } from "@/components/app-shell";
+import { requireAdminSession } from "@/lib/auth";
 import { CandidateList } from "@/components/candidate-list";
 import { SectionCard } from "@/components/cards";
 import { FormSubmitButton } from "@/components/form-submit-button";
@@ -29,6 +30,7 @@ export default async function IdentifyPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const params = await searchParams;
   const sessionId = typeof params.sessionId === "string" ? Number(params.sessionId) : null;
   const numistaPage = typeof params.page === "string" ? Math.max(1, Number(params.page) || 1) : 1;

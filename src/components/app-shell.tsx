@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { logoutAction } from "@/app/actions";
+import { getAdminSession } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -11,13 +13,15 @@ const navItems = [
   { href: "/settings", label: "Settings" }
 ];
 
-export function AppShell({
+export async function AppShell({
   children,
   currentPath
 }: {
   children: ReactNode;
   currentPath?: string;
 }) {
+  const session = await getAdminSession();
+
   return (
     <div className="mx-auto flex min-h-screen max-w-7xl flex-col px-4 pb-12 pt-6 sm:px-6 lg:px-8">
       <header className="mb-8 rounded-[2rem] border border-white/60 bg-white/70 px-5 py-5 shadow-card backdrop-blur sm:px-8">
@@ -32,12 +36,24 @@ export function AppShell({
             </p>
           </div>
 
-          <Link
-            href="/identify"
-            className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper hover:bg-moss"
-          >
-            Quick identify
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link
+              href="/identify"
+              className="inline-flex items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-semibold text-paper hover:bg-moss"
+            >
+              Quick identify
+            </Link>
+            {session ? (
+              <form action={logoutAction}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center rounded-full border border-line/80 bg-paper/70 px-5 py-3 text-sm font-semibold text-ink hover:bg-white"
+                >
+                  Log out
+                </button>
+              </form>
+            ) : null}
+          </div>
         </div>
 
         <nav className="mt-6 flex flex-wrap gap-2">

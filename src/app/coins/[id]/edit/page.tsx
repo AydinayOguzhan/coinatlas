@@ -4,6 +4,7 @@ import { updateCoinAction } from "@/app/actions";
 import { AppShell } from "@/components/app-shell";
 import { CoinForm } from "@/components/coin-form";
 import { SectionCard } from "@/components/cards";
+import { requireAdminSession } from "@/lib/auth";
 import { getCoinById } from "@/lib/data";
 
 export const dynamic = "force-dynamic";
@@ -13,6 +14,7 @@ export default async function EditCoinPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await requireAdminSession();
   const { id } = await params;
   const coin = await getCoinById(Number(id));
 

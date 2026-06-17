@@ -1,8 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { toggleCoinPublishAction } from "@/app/actions";
 import { AppShell } from "@/components/app-shell";
 import { SectionCard } from "@/components/cards";
+import { PublishToggleForm } from "@/components/publish-toggle-form";
+import { requireAdminSession } from "@/lib/auth";
 import { searchCoinsInCollection } from "@/lib/data";
 import { getPublicUploadPath } from "@/lib/uploads";
 import { cn, formatDate } from "@/lib/utils";
@@ -14,6 +17,7 @@ export default async function CoinsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const params = await searchParams;
   const query = typeof params.q === "string" ? params.q : "";
   const country = typeof params.country === "string" ? params.country : "";
@@ -82,16 +86,19 @@ export default async function CoinsPage({
           ) : null}
 
           {items.map((coin) => (
-            <Link key={coin.id} href={`/coins/${coin.id}`} className="block">
-              <article className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-[0_18px_50px_rgba(122,82,43,0.14)]">
-                <div className="grid gap-0 lg:grid-cols-[260px_1fr]">
-                  <div className="relative min-h-[220px] border-b border-line/60 bg-[radial-gradient(circle_at_top,_rgba(182,104,45,0.16),transparent_48%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,243,232,0.95))] p-6 lg:min-h-full lg:border-b-0 lg:border-r">
+            <article
+              key={coin.id}
+              className="overflow-hidden rounded-[2rem] border border-white/70 bg-white/80 shadow-card backdrop-blur transition hover:-translate-y-0.5 hover:border-accent/30 hover:shadow-[0_18px_50px_rgba(122,82,43,0.14)]"
+            >
+              <div className="grid gap-0 lg:grid-cols-[260px_1fr]">
+                <div className="relative min-h-[220px] border-b border-line/60 bg-[radial-gradient(circle_at_top,_rgba(182,104,45,0.16),transparent_48%),linear-gradient(180deg,rgba(255,255,255,0.94),rgba(248,243,232,0.95))] p-6 lg:min-h-full lg:border-b-0 lg:border-r">
+                  <Link href={`/coins/${coin.id}`} className="absolute inset-0 block">
                     {coin.images[0] ? (
                       <Image
                         src={getPublicUploadPath(coin.images[0].filePath)}
                         alt={coin.title}
                         fill
-                        className="p-5 object-contain"
+                        className="object-contain p-5"
                         unoptimized
                       />
                     ) : (
@@ -99,83 +106,100 @@ export default async function CoinsPage({
                         No image yet
                       </div>
                     )}
-                    <div className="pointer-events-none absolute inset-x-6 bottom-5 hidden rounded-full bg-ink/85 px-4 py-2 text-xs uppercase tracking-[0.22em] text-paper/90 sm:block">
-                      {coin.images.length > 0 ? `${coin.images.length} image${coin.images.length > 1 ? "s" : ""}` : "Photo slot ready"}
-                    </div>
+                  </Link>
+                  <div className="pointer-events-none absolute inset-x-6 bottom-5 hidden rounded-full bg-ink/85 px-4 py-2 text-xs uppercase tracking-[0.22em] text-paper/90 sm:block">
+                    {coin.images.length > 0 ? `${coin.images.length} image${coin.images.length > 1 ? "s" : ""}` : "Photo slot ready"}
                   </div>
+                </div>
 
-                  <div className="p-6 sm:p-7">
-                    <div className="flex flex-col gap-5">
-                      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div className="space-y-3">
-                          <div className="flex flex-wrap gap-2">
-                            {coin.country ? (
-                              <span className="rounded-full bg-moss/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-moss">
-                                {coin.country}
-                              </span>
-                            ) : null}
-                            {coin.denomination ? (
-                              <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                                {coin.denomination}
-                              </span>
-                            ) : null}
-                            {coin.year ? (
-                              <span className="rounded-full bg-ink/6 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/70">
-                                {coin.year}
-                              </span>
-                            ) : null}
-                          </div>
+                <div className="p-6 sm:p-7">
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap gap-2">
+                          {coin.country ? (
+                            <span className="rounded-full bg-moss/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-moss">
+                              {coin.country}
+                            </span>
+                          ) : null}
+                          {coin.denomination ? (
+                            <span className="rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                              {coin.denomination}
+                            </span>
+                          ) : null}
+                          {coin.year ? (
+                            <span className="rounded-full bg-ink/6 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-ink/70">
+                              {coin.year}
+                            </span>
+                          ) : null}
+                        </div>
 
-                          <div>
+                        <div>
+                          <Link href={`/coins/${coin.id}`} className="hover:text-moss">
                             <h2 className="font-display text-3xl leading-tight text-ink">{coin.title}</h2>
-                            <p className="mt-2 max-w-2xl text-sm text-ink/68">
-                              {[coin.issuer, coin.currency, coin.storageLocation].filter(Boolean).join(" • ") || "Open the record to review images, notes, source links, and edit this entry."}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="shrink-0 rounded-[1.4rem] border border-line/70 bg-paper/70 px-4 py-3 text-right">
-                          <p className="text-[11px] uppercase tracking-[0.24em] text-moss">Collection status</p>
-                          <p className="mt-2 text-sm font-semibold text-ink">
-                            {coin.condition ? `${coin.condition} condition` : "Condition not set"}
+                          </Link>
+                          <p className="mt-2 max-w-2xl text-sm text-ink/68">
+                            {[coin.issuer, coin.currency, coin.storageLocation].filter(Boolean).join(" • ") || "Open the record to review images, notes, source links, and edit this entry."}
                           </p>
-                          <p className="mt-1 text-xs text-ink/65">Added {formatDate(coin.createdAt)}</p>
                         </div>
                       </div>
 
-                      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                        {buildMeta(coin).map((entry) => (
-                          <div
-                            key={`${coin.id}-${entry.label}`}
-                            className={cn(
-                              "rounded-[1.35rem] border border-line/65 bg-paper/70 px-4 py-3",
-                              entry.value === "Not set" ? "text-ink/55" : "text-ink"
-                            )}
-                          >
-                            <p className="text-[11px] uppercase tracking-[0.2em] text-moss">{entry.label}</p>
-                            <p className="mt-2 text-sm font-semibold">{entry.value}</p>
-                          </div>
-                        ))}
+                      <div className="shrink-0 rounded-[1.4rem] border border-line/70 bg-paper/70 px-4 py-3 text-right">
+                        <p className="text-[11px] uppercase tracking-[0.24em] text-moss">Collection status</p>
+                        <p className="mt-2 text-sm font-semibold text-ink">
+                          {coin.condition ? `${coin.condition} condition` : "Condition not set"}
+                        </p>
+                        <p className="mt-1 text-xs text-ink/65">Added {formatDate(coin.createdAt)}</p>
+                        <p
+                          className={`mt-3 inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${
+                            coin.isPublished ? "bg-moss text-white" : "bg-white text-ink/75"
+                          }`}
+                        >
+                          {coin.isPublished ? "Published" : "Private"}
+                        </p>
                       </div>
+                    </div>
 
-                      {coin.notes ? (
-                        <div className="rounded-[1.5rem] border border-accent/12 bg-accent/5 px-4 py-4">
-                          <p className="text-[11px] uppercase tracking-[0.22em] text-accent">Notes</p>
-                          <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/72">{coin.notes}</p>
+                    <div className="flex flex-wrap items-center justify-between gap-4 rounded-[1.5rem] border border-line/60 bg-white/60 px-4 py-3">
+                      <PublishToggleForm
+                        action={toggleCoinPublishAction.bind(null, coin.id, !coin.isPublished)}
+                        isPublished={coin.isPublished}
+                      />
+                      <p className="text-sm text-ink/62">Switch this coin between private admin-only mode and the public showcase.</p>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                      {buildMeta(coin).map((entry) => (
+                        <div
+                          key={`${coin.id}-${entry.label}`}
+                          className={cn(
+                            "rounded-[1.35rem] border border-line/65 bg-paper/70 px-4 py-3",
+                            entry.value === "Not set" ? "text-ink/55" : "text-ink"
+                          )}
+                        >
+                          <p className="text-[11px] uppercase tracking-[0.2em] text-moss">{entry.label}</p>
+                          <p className="mt-2 text-sm font-semibold">{entry.value}</p>
                         </div>
-                      ) : null}
+                      ))}
+                    </div>
 
-                      <div className="flex items-center justify-between gap-3 border-t border-line/60 pt-1">
-                        <p className="text-sm text-ink/60">Open this record to edit details, images, and source references.</p>
-                        <span className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper">
-                          View coin
-                        </span>
+                    {coin.notes ? (
+                      <div className="rounded-[1.5rem] border border-accent/12 bg-accent/5 px-4 py-4">
+                        <p className="text-[11px] uppercase tracking-[0.22em] text-accent">Notes</p>
+                        <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/72">{coin.notes}</p>
                       </div>
+                    ) : null}
+
+                    <div className="flex items-center justify-between gap-3 border-t border-line/60 pt-1">
+                      <p className="text-sm text-ink/60">Open this record to edit details, images, and source references.</p>
+                      <Link href={`/coins/${coin.id}`} className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper">
+                        View coin
+                      </Link>
                     </div>
                   </div>
                 </div>
-              </article>
-            </Link>
+              </div>
+            </article>
           ))}
         </div>
       </div>

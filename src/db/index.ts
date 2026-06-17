@@ -25,6 +25,7 @@ sqlite.exec(`
     numista_id TEXT,
     title TEXT NOT NULL,
     country TEXT NOT NULL,
+    is_published INTEGER NOT NULL DEFAULT 0,
     issuer TEXT,
     denomination TEXT,
     currency TEXT,
@@ -85,5 +86,10 @@ sqlite.exec(`
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
   );
 `);
+
+const coinColumns = (sqlite as any).prepare("PRAGMA table_info(coins)").all() as Array<{ name: string }>;
+if (!coinColumns.some((column) => column.name === "is_published")) {
+  sqlite.exec("ALTER TABLE coins ADD COLUMN is_published INTEGER NOT NULL DEFAULT 0;");
+}
 
 export const db = drizzle(sqlite, { schema });

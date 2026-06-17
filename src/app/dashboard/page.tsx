@@ -2,12 +2,14 @@ import Link from "next/link";
 
 import { AppShell } from "@/components/app-shell";
 import { SectionCard, StatCard } from "@/components/cards";
+import { requireAdminSession } from "@/lib/auth";
 import { getDashboardStats } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
+  await requireAdminSession();
   const stats = await getDashboardStats();
 
   return (

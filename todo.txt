@@ -5,3 +5,5 @@
 [+]numista matchlerine tıklanmıyor. onlara tıklayıp numista sitesine gidebilmeliyim
 [+]identify ekranı aynı resimle (veya farklı resimle) aynı parayı aramama rağmen koleksiyonumda match bulamadi (match var)
 [+]search özelliği de para koleksiyonumda ekli olmasına rağmen match bulamadı 
+[]basic seviye bir login ekle
+[]public sayfası ekle

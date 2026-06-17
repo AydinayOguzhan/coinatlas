@@ -19,6 +19,38 @@ export async function getDashboardStats() {
   };
 }
 
+export async function getPublishedCoins() {
+  return db.query.coins.findMany({
+    where: eq(coins.isPublished, true),
+    with: {
+      images: true
+    },
+    orderBy: (coin, helpers) => [helpers.desc(coin.updatedAt)]
+  });
+}
+
+export async function getPublishedCoinById(id: number) {
+  const coin = await db.query.coins.findFirst({
+    where: sql`${coins.id} = ${id} and ${coins.isPublished} = 1`,
+    with: {
+      images: true
+    }
+  });
+
+  return coin ?? null;
+}
+
+export async function isPublicUploadPath(filePath: string) {
+  const match = await db
+    .select({ id: coinImages.id })
+    .from(coinImages)
+    .innerJoin(coins, eq(coinImages.coinId, coins.id))
+    .where(sql`${coinImages.filePath} = ${filePath} and ${coins.isPublished} = 1`)
+    .limit(1);
+
+  return match.length > 0;
+}
+
 export async function searchCoinsInCollection(
   query?: string,
   filters?: Record<string, string | undefined>,
@@ -223,6 +255,7 @@ export function mapCatalogDetailsToCoin(details: CatalogCoinDetails) {
     numistaId: details.numistaId ?? null,
     title: details.title,
     country: details.country ?? "Unknown",
+    isPublished: false,
     issuer: details.issuer ?? null,
     denomination: details.denomination ?? null,
     currency: details.currency ?? null,
