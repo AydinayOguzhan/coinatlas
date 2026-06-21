@@ -16,13 +16,11 @@ export default async function DashboardPage() {
     <AppShell currentPath="/dashboard">
       <header className="mb-10 flex flex-col gap-6 border-b border-line/35 pb-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-xs uppercase tracking-[0.28em] text-moss">Vault overview</p>
-          <h2 className="mt-2 font-display text-5xl text-ink">Manage the archive with precision.</h2>
-          <p className="mt-4 max-w-2xl text-base leading-7 text-ink/70">
-            Review collection growth, recent additions, and move directly into identification or curation work.
-          </p>
+          <p className="text-xs uppercase tracking-[0.28em] text-moss">Overview</p>
+          <h2 className="mt-2 font-display text-5xl text-ink">Collection dashboard</h2>
+          <p className="mt-4 max-w-2xl text-base leading-7 text-ink/70">See recent additions and jump into the next task.</p>
         </div>
-        <span className="text-sm uppercase tracking-[0.22em] text-primary/70">Private Admin Surface</span>
+        <span className="text-sm uppercase tracking-[0.22em] text-primary/70">Admin</span>
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">

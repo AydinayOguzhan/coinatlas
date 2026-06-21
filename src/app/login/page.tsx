@@ -27,12 +27,12 @@ export default async function LoginPage({
         <div className="w-full">
           <div className="mb-8 text-center">
             <h1 className="font-display text-4xl text-primary">CoinAtlas</h1>
-            <p className="mt-2 text-xs uppercase tracking-[0.28em] text-ink/50">Digital Numismatic Archive</p>
+            <p className="mt-2 text-xs uppercase tracking-[0.28em] text-ink/50">Admin login</p>
           </div>
 
           <div className="parchment-card rounded-lg p-8">
             <div className="mb-6">
-              <h2 className="font-display text-4xl text-ink">Private Vault Access</h2>
+              <h2 className="font-display text-4xl text-ink">Sign in</h2>
               <div className="mt-3 h-px w-12 bg-line/80" />
             </div>
 
@@ -62,12 +62,12 @@ export default async function LoginPage({
                 disabled={!configured}
                 className="inline-flex w-full items-center justify-center rounded-sm bg-[#e6c093] px-6 py-3 text-sm font-semibold uppercase tracking-[0.18em] text-ink transition hover:bg-[#d8b382] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Login to archive
+                Login
               </button>
             </form>
 
             <div className="mt-8 border-t border-line/35 pt-6 text-sm leading-7 text-ink/68">
-              Authorized access only. The public showcase is separate from the private archive. Admin tools, collection notes, prices, and storage details remain behind this login.
+              This area is only for managing the collection.
             </div>
           </div>
         </div>

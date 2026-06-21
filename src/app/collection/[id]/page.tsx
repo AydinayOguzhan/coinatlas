@@ -48,10 +48,10 @@ export default async function PublicCoinDetailPage({
         <section className="space-y-4">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <span className="text-xs uppercase tracking-[0.24em] text-primary/70">{coin.country ?? "Published specimen"}</span>
+              <span className="text-xs uppercase tracking-[0.24em] text-primary/70">{coin.country ?? "Published item"}</span>
               <h1 className="mt-2 font-display text-5xl leading-none text-ink">{coin.title}</h1>
               <p className="mt-4 text-lg leading-7 text-ink/72">
-                {[coin.denomination, coin.year, coin.composition].filter(Boolean).join(" • ") || "Publicly showcased from the private CoinAtlas archive."}
+                {[coin.denomination, coin.year, coin.composition].filter(Boolean).join(" • ") || "Published item"}
               </p>
             </div>
             {coin.sourceUrl ? (
@@ -83,7 +83,7 @@ export default async function PublicCoinDetailPage({
         </section>
 
         <div className="space-y-6">
-          <SectionCard title="Technical specifications" description="Safe metadata only. Private collection notes remain in the admin archive.">
+          <SectionCard title="Details" description="Public coin information">
             <dl className="space-y-3">
               {metadata.map(([label, value]) =>
                 value ? (
@@ -96,7 +96,7 @@ export default async function PublicCoinDetailPage({
             </dl>
           </SectionCard>
 
-          <SectionCard title="Curated descriptions" description="Narrative details visible to public viewers.">
+          <SectionCard title="Descriptions" description="Visible on the public page">
             <div className="space-y-5 text-sm leading-7 text-ink/78">
               <p>
                 <strong>Obverse:</strong> {coin.obverseDescription ?? "Not set"}

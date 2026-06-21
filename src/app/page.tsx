@@ -16,19 +16,16 @@ export default async function HomePage() {
       <section className="py-8 text-center">
         <div className="mx-auto max-w-3xl space-y-4">
           <h1 className="font-display text-5xl leading-none text-ink sm:text-6xl">CoinAtlas</h1>
-          <p className="text-2xl italic text-primary/85">A Private Numismatic Archive</p>
+          <p className="text-2xl italic text-primary/85">Published collection</p>
           <div className="editorial-divider mx-auto my-6 max-w-md" />
-          <p className="text-lg leading-8 text-ink/72">
-            A self-hosted collection showcase of historical coins, curated for preservation and study. Discover selected artifacts without exposing the private archive behind them.
-          </p>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             {session ? (
               <Link href="/dashboard" className="rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel">
-                Open Admin Panel
+                Open admin
               </Link>
             ) : (
               <Link href="/login" className="rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel">
-                Login to Archive
+                Login
               </Link>
             )}
             <span className="rounded-full border border-line/70 bg-[#f2efe9] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-ink/60">
@@ -41,23 +38,17 @@ export default async function HomePage() {
       <section className="py-10">
         <div className="mb-8 flex items-end justify-between gap-4 border-b border-line/35 pb-4">
           <div>
-            <h2 className="font-display text-4xl text-ink">Curated Highlights</h2>
-            <p className="mt-2 text-sm uppercase tracking-[0.24em] text-primary/70">Exhibition 01</p>
+            <h2 className="font-display text-4xl text-ink">Published coins</h2>
           </div>
-          <p className="hidden max-w-md text-right text-sm leading-6 text-ink/62 md:block">
-            Only coins you explicitly publish appear here. The rest of the collection remains in your private admin ledger.
-          </p>
         </div>
 
         {coins.length === 0 ? (
           <div className="parchment-card rounded-xl p-8 text-center">
             <h3 className="font-display text-3xl text-ink">No public coins yet</h3>
-            <p className="mt-3 text-sm leading-7 text-ink/68">
-              Publish coins from the admin collection to turn this page into a public-facing exhibition.
-            </p>
+            <p className="mt-3 text-sm leading-7 text-ink/68">Publish a coin from the admin panel to show it here.</p>
             <div className="mt-6">
               <Link href="/login" className="rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel">
-                Log in to manage showcase items
+                Login
               </Link>
             </div>
           </div>

@@ -28,7 +28,7 @@ export async function AppShell({
         <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between px-4 sm:px-6">
           <div>
             <p className="font-display text-3xl text-primary">CoinAtlas</p>
-            <p className="text-[11px] uppercase tracking-[0.24em] text-ink/45">Private Archive</p>
+            <p className="text-[11px] uppercase tracking-[0.24em] text-ink/45">Admin</p>
           </div>
           {session ? (
             <form action={logoutAction}>
@@ -61,7 +61,7 @@ export async function AppShell({
         <aside className="hidden min-h-screen w-64 shrink-0 border-r border-line/25 bg-[#f6f3f0] px-4 py-8 lg:flex lg:flex-col">
           <div className="mb-10 px-2">
             <p className="font-display text-3xl text-primary">CoinAtlas</p>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-ink/45">Private Archive</p>
+            <p className="mt-1 text-[11px] uppercase tracking-[0.24em] text-ink/45">Admin</p>
           </div>
 
           <nav className="flex-1 space-y-2">
@@ -101,17 +101,14 @@ export async function AppShell({
         <div className="min-w-0 flex-1 px-4 pb-14 pt-8 sm:px-6 lg:px-10">
           <div className="mb-8 hidden items-end justify-between gap-6 lg:flex">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-moss">Collector workspace</p>
-              <h1 className="mt-2 font-display text-5xl leading-none text-ink">A private ledger for your collection.</h1>
-              <p className="mt-4 max-w-3xl text-base leading-7 text-ink/70">
-                Catalog acquisitions, compare potential matches, and decide what enters the public showcase without exposing the rest of your archive.
-              </p>
+              <p className="text-xs uppercase tracking-[0.28em] text-moss">Admin panel</p>
+              <h1 className="mt-2 font-display text-5xl leading-none text-ink">Manage your collection.</h1>
             </div>
             <Link
               href="/identify"
               className="inline-flex items-center justify-center rounded-lg bg-[#e6c093] px-5 py-3 text-sm font-semibold text-ink shadow-panel transition hover:bg-[#d8b382]"
             >
-              Quick identify
+              Identify coin
             </Link>
           </div>
 

@@ -37,7 +37,7 @@ export function PublishToggleForm({ action, isPublished }: PublishToggleFormProp
       onClick={(event) => event.stopPropagation()}
     >
       <div className="text-right">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-moss">Public showcase</p>
+        <p className="text-[11px] uppercase tracking-[0.22em] text-moss">Visibility</p>
         <p className="mt-1 text-sm font-semibold text-ink">{isPublished ? "Published" : "Private"}</p>
       </div>
       <PublishToggleButton isPublished={isPublished} />

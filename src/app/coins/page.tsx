@@ -165,7 +165,7 @@ export default async function CoinsPage({
                         action={toggleCoinPublishAction.bind(null, coin.id, !coin.isPublished)}
                         isPublished={coin.isPublished}
                       />
-                      <p className="text-sm text-ink/62">Switch this coin between private admin-only mode and the public showcase.</p>
+                      <p className="text-sm text-ink/62">Choose whether this coin appears on the public pages.</p>
                     </div>
 
                     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -191,7 +191,7 @@ export default async function CoinsPage({
                     ) : null}
 
                     <div className="flex items-center justify-between gap-3 border-t border-line/60 pt-1">
-                      <p className="text-sm text-ink/60">Open this record to edit details, images, and source references.</p>
+                      <p className="text-sm text-ink/60">Open this record to edit details and images.</p>
                       <Link href={`/coins/${coin.id}`} className="rounded-full bg-[#e6c093] px-4 py-2 text-sm font-semibold text-ink">
                         View coin
                       </Link>

@@ -97,7 +97,7 @@ export default async function IdentifyPage({
   return (
     <AppShell currentPath="/identify">
       <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <SectionCard title="Identify a coin" description="Upload an image or enter text. OCR and AI only assist; you verify every field.">
+        <SectionCard title="Identify a coin" description="Upload images or enter text, then review the results.">
           {!envHealth.GOOGLE_API_KEY || !envHealth.NUMISTA_API_KEY ? (
             <div className="mb-4 rounded-2xl border border-line bg-paper/70 px-4 py-3 text-sm text-ink">
               Missing configuration:
@@ -173,10 +173,10 @@ export default async function IdentifyPage({
             buildHref={(item) => `/coins/new?numistaId=${item.providerId}`}
           />
           {totalPages > 1 ? (
-            <SectionCard
-              title="Browse Matches"
-              description={`Showing page ${numistaSearchResult.page} of ${totalPages} across ${numistaSearchResult.totalCount} Numista matches.`}
-            >
+          <SectionCard
+            title="Browse matches"
+            description={`Page ${numistaSearchResult.page} of ${totalPages} · ${numistaSearchResult.totalCount} Numista matches`}
+          >
               <div className="flex flex-wrap items-center gap-3">
                 {numistaSearchResult.page > 1 ? (
                   <Link href={buildPageHref(numistaSearchResult.page - 1)} className="rounded-full bg-paper px-4 py-2 text-sm font-semibold text-ink">
@@ -210,7 +210,7 @@ export default async function IdentifyPage({
               </div>
             </SectionCard>
           ) : null}
-          <SectionCard title="Create manually" description="If nothing matches, start from a blank editable form.">
+          <SectionCard title="Create manually" description="Use a blank form if you do not want to import a match.">
             <Link href="/coins/new" className="text-sm font-semibold text-accent hover:underline">
               Open manual coin form
             </Link>

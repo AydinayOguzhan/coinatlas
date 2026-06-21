@@ -112,7 +112,7 @@ export function CoinForm({ action, submitLabel, initialValues }: CoinFormProps) 
         <input type="checkbox" name="isPublished" defaultChecked={Boolean(initialValues?.isPublished)} className="mt-1 h-4 w-4 shrink-0" />
         <span>
           <strong className="block text-ink">Publish publicly</strong>
-          This coin will appear on the public showcase and public detail pages. Leave it unchecked to keep it admin-only.
+          Show this coin on the public pages.
         </span>
       </label>
 
@@ -185,7 +185,7 @@ export function CoinForm({ action, submitLabel, initialValues }: CoinFormProps) 
       </div>
 
       <p className="rounded-2xl border border-accent/25 bg-accent/10 px-4 py-3 text-sm text-ink/80">
-        External results are suggestions only. Review and edit every field before saving to your collection.
+        Review imported results before saving.
       </p>
 
       <button

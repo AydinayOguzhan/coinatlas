@@ -44,7 +44,7 @@ export default async function SearchPage({
   return (
     <AppShell currentPath="/search">
       <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-        <SectionCard title="Search your collection" description="Use text alone or upload a coin photo to extract searchable text.">
+        <SectionCard title="Search your collection" description="Search by text, or use images to extract text first.">
           {error ? (
             <div className="mb-4 rounded-2xl border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-ink">
               {error}
@@ -80,7 +80,7 @@ export default async function SearchPage({
           ) : null}
         </SectionCard>
 
-        <SectionCard title="Search results" description="The MVP uses SQLite LIKE search across major catalog fields.">
+        <SectionCard title="Search results" description="Matches from your collection">
           <div className="space-y-3">
             {results.length === 0 ? <p className="text-sm text-ink/70">No local matches found yet.</p> : null}
             {results.map((coin) => (

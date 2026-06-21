@@ -17,7 +17,7 @@ export function PublicShell({
               CoinAtlas
             </Link>
             <span className="hidden text-xs uppercase tracking-[0.32em] text-ink/45 md:inline">
-              Private Numismatic Archive
+              Collection
             </span>
           </div>
 

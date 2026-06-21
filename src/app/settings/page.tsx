@@ -23,7 +23,7 @@ export default async function SettingsPage() {
   return (
     <AppShell currentPath="/settings">
       <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-        <SectionCard title="Provider configuration" description="Secret values are never shown here, only whether they are configured.">
+        <SectionCard title="Configuration" description="Values are hidden here. You only see whether they are set.">
           <div className="space-y-3">
             {rows.map(([key, configured, note]) => (
               <div key={key} className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-line/70 bg-paper/75 p-4">
@@ -39,7 +39,7 @@ export default async function SettingsPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Runtime choices" description="Provider-based architecture keeps future OCR and catalog integrations swappable.">
+        <SectionCard title="Runtime choices" description="Current providers and limits">
           <dl className="space-y-3 text-sm text-ink/75">
             <div className="flex justify-between gap-3 rounded-[1.25rem] bg-paper/70 p-4">
               <dt>OCR provider</dt>
