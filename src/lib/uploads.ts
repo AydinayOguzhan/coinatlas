@@ -6,9 +6,19 @@ import { ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
 import { getEnv } from "@/lib/env";
 import { slugifyFileName } from "@/lib/utils";
 
-function resolveUploadDir() {
+export function resolveUploadDir() {
   const env = getEnv();
   return path.resolve(process.cwd(), env.uploadDir);
+}
+
+export function normalizeStoredUploadPath(filePath: string) {
+  const normalized = filePath.replace(/\\/g, "/").trim();
+  const parts = normalized.split("/").filter(Boolean);
+  return parts[parts.length - 1] ?? normalized;
+}
+
+export function resolveAbsoluteUploadPath(filePath: string) {
+  return path.join(resolveUploadDir(), normalizeStoredUploadPath(filePath));
 }
 
 function inferExtensionFromMimeType(mimeType: string | null | undefined) {
@@ -42,7 +52,7 @@ async function persistBuffer(input: {
 
   return {
     absolutePath,
-    relativePath: path.relative(process.cwd(), absolutePath),
+    relativePath: storedName,
     originalFileName: input.originalFileName,
     mimeType: input.mimeType,
     sizeBytes: input.bytes.length
@@ -50,8 +60,7 @@ async function persistBuffer(input: {
 }
 
 export function getPublicUploadPath(filePath: string) {
-  const relativePath = filePath.replace(`${process.cwd()}/`, "");
-  return `/api/uploads/${relativePath}`;
+  return `/api/uploads/${encodeURIComponent(normalizeStoredUploadPath(filePath))}`;
 }
 
 export async function saveUploadedFile(file: File) {

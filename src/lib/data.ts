@@ -3,6 +3,7 @@ import { count, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { coinImages, coins, identificationSessions } from "@/db/schema";
 import type { CatalogCoinDetails, CatalogSearchResult } from "@/lib/providers/types";
+import { normalizeStoredUploadPath } from "@/lib/uploads";
 import { buildNormalizedQuery, extractUsefulQueryTerms, tryParseJson } from "@/lib/utils";
 
 export async function getDashboardStats() {
@@ -41,11 +42,20 @@ export async function getPublishedCoinById(id: number) {
 }
 
 export async function isPublicUploadPath(filePath: string) {
+  const normalizedPath = normalizeStoredUploadPath(filePath);
+  const legacyDefaultPath = `uploads/${normalizedPath}`;
+  const suffixPattern = `%/${normalizedPath}`;
   const match = await db
     .select({ id: coinImages.id })
     .from(coinImages)
     .innerJoin(coins, eq(coinImages.coinId, coins.id))
-    .where(sql`${coinImages.filePath} = ${filePath} and ${coins.isPublished} = 1`)
+    .where(
+      sql`(
+        ${coinImages.filePath} = ${normalizedPath}
+        or ${coinImages.filePath} = ${legacyDefaultPath}
+        or ${coinImages.filePath} like ${suffixPattern}
+      ) and ${coins.isPublished} = 1`
+    )
     .limit(1);
 
   return match.length > 0;
