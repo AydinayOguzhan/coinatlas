@@ -1,21 +1,56 @@
 # CoinAtlas
 
-CoinAtlas is an open-source, self-hosted coin collection web application built for personal cataloging and assisted identification. It is not a Numista clone. Instead, it helps collectors manage their own collection locally while using OCR, AI, and Numista as optional external catalog assistance.
+CoinAtlas is an open-source, self-hosted collection manager for coins, banknotes, medals, and similar numismatic objects. It is built for private cataloging first, with an optional public showcase for the items you choose to publish.
 
-## Features
+The app is designed for personal collections. OCR, AI, and Numista support identification and cataloging, but the collector stays in control of the final data.
 
-- Personal coin CRUD with editable metadata
-- Public showcase for published coins
-- Shared admin login for the private management panel
-- Local SQLite storage with Drizzle ORM
-- Front and back image upload to local storage
-- Mobile-friendly identify flow
-- OCR and AI-assisted query generation through a provider interface
-- Numista text search and details import through a server-side provider
-- Local text search and image-assisted local search
-- Identification session history storage for debugging and review
-- JSON and CSV export endpoints
-- Environment health page that never exposes secret values
+## What It Does
+
+- Keep a private catalog with editable metadata
+- Upload obverse and reverse images to local storage
+- Search your collection by text or image-assisted OCR
+- Run an identification flow with OCR, AI, and Numista matches
+- Import external match data into an editable coin form
+- Publish selected items to a public showcase
+- Export the collection as JSON or CSV
+
+## Public And Admin Surfaces
+
+CoinAtlas has two surfaces:
+
+- Public site: `/`
+- Admin panel: everything behind `/login`
+
+Public visitors can only see records that are marked as published.
+
+Admin users can:
+
+- manage the full collection
+- create and edit records
+- upload images
+- identify coins from images or text
+- search the local collection
+- review provider configuration
+- export data
+- control which items appear publicly
+
+This is intentionally a shared-login system, not a multi-user account system.
+
+## Main Features
+
+- Shared admin login using env-based credentials
+- Cookie-based admin session
+- Public showcase homepage for published items
+- Public detail pages for published items only
+- Coin CRUD with editable metadata
+- Publish/private toggle in both edit flow and collection list
+- Local SQLite database with Drizzle ORM
+- Local image uploads
+- OCR and AI-assisted identification
+- Numista text search and type import
+- Local search with optional image-assisted query extraction
+- Provider health view without exposing secret values
+- JSON and CSV export routes
 
 ## Stack
 
@@ -24,26 +59,54 @@ CoinAtlas is an open-source, self-hosted coin collection web application built f
 - SQLite
 - Drizzle ORM
 - Tailwind CSS
-- Server Actions and Route Handlers
+- Server Actions
+- Route Handlers
+
+## Routes
+
+### Public
+
+- `/` public showcase
+- `/collection/[id]` public detail page for a published item
+
+### Admin
+
+- `/login`
+- `/dashboard`
+- `/coins`
+- `/coins/new`
+- `/coins/[id]`
+- `/coins/[id]/edit`
+- `/identify`
+- `/search`
+- `/settings`
+
+### Export
+
+- `/api/export/json`
+- `/api/export/csv`
 
 ## Getting Started
 
-1. Install dependencies:
+1. Install dependencies
 
 ```bash
 npm install
 ```
 
-2. Create your local environment file:
+2. Create a local env file
 
 ```bash
 cp .env.example .env
 ```
 
-3. Fill in your API keys if you want OCR, AI analysis, or Numista lookup.
-   Also set your shared admin login credentials before exposing the app.
+3. Fill in the values you need
 
-4. Start the development server:
+- `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `AUTH_SECRET` are required for admin login
+- `NUMISTA_API_KEY` is required for Numista search and import
+- `GOOGLE_API_KEY` is required for Gemini OCR and image analysis
+
+4. Start the dev server
 
 ```bash
 npm run dev
@@ -51,7 +114,7 @@ npm run dev
 
 5. Open [http://localhost:3000](http://localhost:3000)
 
-The SQLite database is created automatically from the runtime schema on first boot.
+The SQLite database is created automatically. If an older local database is missing the `is_published` column, CoinAtlas adds it on boot.
 
 ## Environment Variables
 
@@ -73,81 +136,108 @@ UPLOAD_DIR="./uploads"
 MAX_UPLOAD_SIZE_MB="10"
 ```
 
+### Notes
+
+- `AUTH_SECRET` should be a strong random value
+- `UPLOAD_DIR` is local storage for uploaded images
+- `DATABASE_URL` defaults to a local SQLite file
+
+Example secret generation:
+
+```bash
+openssl rand -hex 32
+```
+
+## Publish Workflow
+
+Items are private by default.
+
+To make an item public:
+
+1. Create or edit the record
+2. Enable `Publish publicly`
+3. Save the record
+
+You can also toggle publish status directly from the collection list.
+
+Published records appear on:
+
+- `/`
+- `/collection/[id]`
+
+Unpublished records stay admin-only.
+
+## Identification Flow
+
+1. Upload images or enter text clues
+2. OCR extracts visible text
+3. AI summarizes what is visible
+4. The app builds a normalized query
+5. The app searches the local collection
+6. The app searches Numista
+7. You review candidates
+8. You import a match or create a manual record
+9. You verify and save the final data
+
+External results can be wrong. Always review imported fields before saving.
+
 ## Provider Architecture
 
-The app uses provider interfaces so OCR, AI vision, and catalog integrations can be swapped later without rewriting the UI flow.
+Providers are separated so OCR, AI, and catalog integrations can be replaced later without rewriting the app flow.
 
-- `OcrProvider`
-- `AiVisionProvider`
-- `CatalogProvider`
-
-Current implementations:
+Current provider setup:
 
 - Google Gemini for OCR and image analysis
 - Numista for catalog search and type details
 
-All provider calls happen server-side. API keys are read from environment variables only.
+All provider calls happen server-side.
 
 ## Security Notes
 
-- The public homepage only shows coins marked as published
-- All admin routes require the shared login cookie
-- `.env` is ignored by Git
-- Secrets are never exposed to client-side code
-- Secrets are never displayed in the settings UI
-- Uploaded files are validated for type and size
+- Secrets are read from environment variables only
+- `.env` is ignored by git
+- No secret values are shown in the UI
+- The settings screen only shows whether a value is configured
+- Admin routes require a signed cookie session
+- Uploaded files are validated for size and type
 - Uploaded files are stored locally under `UPLOAD_DIR`
-- File serving uses path normalization to prevent traversal
-- External provider errors are surfaced with user-friendly messages
+- Public image serving is restricted to published items unless the admin is logged in
+- Do not hard-code keys, passwords, or tokens in the repo
 
-## Identification Flow
+## Useful Scripts
 
-1. User uploads an image or enters text
-2. OCR extracts visible text
-3. AI optionally summarizes visible coin details
-4. The app builds a normalized search query
-5. The app searches the local collection
-6. The app searches Numista by text
-7. The user reviews suggested matches
-8. The user can import a candidate into an editable form
-9. The user verifies and saves the coin locally
-
-External data may be inaccurate. Users should always verify every field before saving.
-
-## Admin And Public Access
-
-- `/` is the public showcase page
-- `/collection/[id]` shows public details for published coins only
-- `/login` unlocks the private admin panel
-- Admin routes such as `/dashboard`, `/coins`, `/identify`, `/search`, and `/settings` require the shared login
-- This is intentionally a single shared admin login, not a multi-user account system
-
-## Export
-
-- JSON: `/api/export/json`
-- CSV: `/api/export/csv`
+```bash
+npm run dev
+npm run build
+npm run start
+npm run typecheck
+npm run lint
+npm run db:generate
+npm run db:studio
+```
 
 ## Contributing
 
-Contributions are welcome. Please keep the project self-hosted, provider-based, and security-conscious.
+Contributions are welcome.
 
-- Do not hard-code credentials or secrets
-- Keep external API calls server-side
-- Preserve editable import flows so the user stays in control
-- Prefer clear, small, documented changes
+Please keep the project:
 
-If you add a new provider, follow the existing provider interfaces and keep configuration environment-driven.
+- self-hosted
+- env-driven
+- server-side for external API calls
+- editable after import
+- security-conscious
+
+If you add a new provider, follow the existing provider interfaces and keep secret configuration out of the client.
 
 ## Roadmap
 
-Near-term improvements that fit the current architecture:
-
-- SQLite FTS for stronger local search
 - Better identification history browsing
-- Camera-first phone capture flow
-- Richer CSV import and export
-- Additional OCR or AI providers
+- Stronger local search
+- Improved mobile capture flow
+- Richer import and export options
+- Additional OCR and catalog providers
 
 ## Accuracy Warning
 
-OCR, AI analysis, and external catalog data can all be wrong. CoinAtlas is designed to assist the user, not make final decisions.
+CoinAtlas assists the cataloging process. It does not guarantee that OCR, AI output, or external catalog matches are correct.
